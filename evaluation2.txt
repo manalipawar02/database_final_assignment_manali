@@ -1,0 +1,113 @@
+ create table doctor(dr_id int AUTO_INCREMENT PRIMARY KEY,
+    ->     dr_name varchar(200),
+    ->     dr_age int,
+    ->     dr_gender varchar(200),
+    ->     dr_city varchar(200),
+    ->     specialization varchar(200),
+    ->     years_of_experience int,
+    ->     salary DECIMAL(10,2)
+    ->     );
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> desc doctor;
++---------------------+---------------+------+-----+---------+----------------+
+| Field               | Type          | Null | Key | Default | Extra          |
++---------------------+---------------+------+-----+---------+----------------+
+| dr_id               | int           | NO   | PRI | NULL    | auto_increment |
+| dr_name             | varchar(200)  | YES  |     | NULL    |                |
+| dr_age              | int           | YES  |     | NULL    |                |
+| dr_gender           | varchar(200)  | YES  |     | NULL    |                |
+| dr_city             | varchar(200)  | YES  |     | NULL    |                |
+| specialization      | varchar(200)  | YES  |     | NULL    |                |
+| years_of_experience | int           | YES  |     | NULL    |                |
+| salary              | decimal(10,2) | YES  |     | NULL    |                |
++---------------------+---------------+------+-----+---------+----------------+
+8 rows in set (0.01 sec)
+
+create table patients(pt_id int AUTO_INCREMENT PRIMARY KEY,
+    ->     pt_name varchar(200),
+    ->     pt_age int,
+    ->     pt_gender varchar(200),
+    ->     pt_city varchar(200),
+    ->     date_of_admission DATE,
+    ->     status varchar(200),
+    ->     dr_id int,
+    ->     FOREIGN KEY(dr_id) REFERENCES doctor(dr_id)
+    ->     );
+Query OK, 0 rows affected (0.04 sec)
+
+mysql> desc patients;
++-------------------+--------------+------+-----+---------+----------------+
+| Field             | Type         | Null | Key | Default | Extra          |
++-------------------+--------------+------+-----+---------+----------------+
+| pt_id             | int          | NO   | PRI | NULL    | auto_increment |
+| pt_name           | varchar(200) | YES  |     | NULL    |                |
+| pt_age            | int          | YES  |     | NULL    |                |
+| pt_gender         | varchar(200) | YES  |     | NULL    |                |
+| pt_city           | varchar(200) | YES  |     | NULL    |                |
+| date_of_admission | date         | YES  |     | NULL    |                |
+| status            | varchar(200) | YES  |     | NULL    |                |
+| dr_id             | int          | YES  | MUL | NULL    |                |
++-------------------+--------------+------+-----+---------+----------------+
+8 rows in set (0.00 sec)
+
+ insert into doctor values(1,'anuradha',32,'female','ahmedabad','ortho',4,80000.00),
+    -> (2,'aayan',35,'male','ahmedabad','ortho',5,90000.00),
+    -> (3,'seema',40,'female','pune','pediatrician',3,40000.00),
+    -> (4,'avinash',50,'male','ahmedabad','ortho',7,70000.00),
+    -> (5,'anushri',60,'female','mumbai','cardio',8,90000.00),
+    -> (6,'manali',35,'female','ahmedabad','dentist',3,80000.00),
+    -> (7,'deepak',27,'male','kolhapur','nero',6,80000.00),
+    -> (8,'priya',29,'female','surat','derma',8,80000.00),
+    -> (9,'priti',26,'female','mumbai','neuro',1,30000.00);
+Query OK, 9 rows affected (0.01 sec)
+Records: 9  Duplicates: 0  Warnings: 0
+
+mysql> select * from doctor;
++-------+----------+--------+-----------+-----------+----------------+---------------------+----------+
+| dr_id | dr_name  | dr_age | dr_gender | dr_city   | specialization | years_of_experience | salary   |
++-------+----------+--------+-----------+-----------+----------------+---------------------+----------+
+|     1 | anuradha |     32 | female    | ahmedabad | ortho          |                   4 | 80000.00 |
+|     2 | aayan    |     35 | male      | ahmedabad | ortho          |                   5 | 90000.00 |
+|     3 | seema    |     40 | female    | pune      | pediatrician   |                   3 | 40000.00 |
+|     4 | avinash  |     50 | male      | ahmedabad | ortho          |                   7 | 70000.00 |
+|     5 | anushri  |     60 | female    | mumbai    | cardio         |                   8 | 90000.00 |
+|     6 | manali   |     35 | female    | ahmedabad | dentist        |                   3 | 80000.00 |
+|     7 | deepak   |     27 | male      | kolhapur  | nero           |                   6 | 80000.00 |
+|     8 | priya    |     29 | female    | surat     | derma          |                   8 | 80000.00 |
+|     9 | priti    |     26 | female    | mumbai    | neuro          |                   1 | 30000.00 |
++-------+----------+--------+-----------+-----------+----------------+---------------------+----------+
+9 rows in set (0.00 sec)
+
+
+
+5.patients from city pune & mumbai
+select pt_name,pt_city from patients WHERE pt_city='pune' AND pt_city='mumbai';
+
+
+6.doctors living in ahmedabad staring letter "A"
+select dr_city,dr_name from doctor WHERE dr_city='ahmedabad' AND dr_name LIKE 'a%';
++-----------+----------+
+| dr_city   | dr_name  |
++-----------+----------+
+| ahmedabad | anuradha |
+| ahmedabad | aayan    |
+| ahmedabad | avinash  |
++-----------+----------+
+3 rows in set (0.00 sec)
+
+7.dr having years of experience more than 4
+ select dr_id,dr_name,years_of_experience from doctor WHERE years_of_experience > 4;
++-------+---------+---------------------+
+| dr_id | dr_name | years_of_experience |
++-------+---------+---------------------+
+|     2 | aayan   |                   5 |
+|     4 | avinash |                   7 |
+|     5 | anushri |                   8 |
+|     7 | deepak  |                   6 |
+|     8 | priya   |                   8 |
++-------+---------+---------------------+
+5 rows in set (0.00 sec)
+
+9.Find all no_of_patients from city pune & mumbai
+select pt_city,COUNT(*) AS no_of_patient from patients WHERE city='pune AND city='mumbai' GROUP BY pt_city;
